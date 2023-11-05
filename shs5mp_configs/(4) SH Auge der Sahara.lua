@@ -151,13 +151,13 @@ end
 
 function SetupCamps()
     local Peacetime = GetSelectedPeacetime();
-    if Peacetime == 1 then
+    if Peacetime == 1 or Peacetime == 6 then
         SetupCampsWS0();
-    elseif Peacetime == 2 then
+    elseif Peacetime == 2 or Peacetime == 7 then
         SetupCampsWS10();
-    elseif Peacetime == 3 then
+    elseif Peacetime == 3 or Peacetime == 8 then
         SetupCampsWS20();
-    elseif Peacetime == 4 then
+    elseif Peacetime == 4 or Peacetime == 9 then
         SetupCampsWS30();
     else
         SetupCampsWS40();

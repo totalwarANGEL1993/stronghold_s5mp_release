@@ -145,7 +145,8 @@ function CreateProvinces()
         {Entities.PU_LeaderBow2, 0},
     }
 
-    if GetSelectedPeacetime() == 2 then
+    local PeaceTimeSelected = GetSelectedPeacetime();
+    if PeaceTimeSelected == 2 or PeaceTimeSelected == 7 then
         Troops = {
             {Entities.PU_LeaderPoleArm1, 1},
             {Entities.PU_LeaderSword1, 2},
@@ -154,7 +155,7 @@ function CreateProvinces()
             {Entities.PU_LeaderBow2, 1},
             {Entities.PU_LeaderBow2, 1},
         }
-    elseif GetSelectedPeacetime() == 3 then
+    elseif PeaceTimeSelected == 3 or PeaceTimeSelected == 8 then
         Troops = {
             {Entities.PU_LeaderPoleArm2, 2},
             {Entities.PU_LeaderSword2, 2},
@@ -165,7 +166,7 @@ function CreateProvinces()
             {Entities.PU_LeaderPoleArm2, 2},
             {Entities.PU_LeaderRifle1, 2},
         }
-    elseif GetSelectedPeacetime() == 4 then
+    elseif PeaceTimeSelected == 4 or PeaceTimeSelected == 9 then
         Troops = {
             {Entities.PU_LeaderPoleArm3, 3},
             {Entities.PU_LeaderSword3, 2},
@@ -178,7 +179,7 @@ function CreateProvinces()
             {Entities.PU_LeaderBow3, 2},
             {Entities.PV_Cannon1, 0},
         }
-    elseif GetSelectedPeacetime() == 5 then
+    elseif PeaceTimeSelected == 5 or PeaceTimeSelected == 10 then
         Troops = {
             {Entities.PU_LeaderPoleArm4, 3},
             {Entities.PU_LeaderSword4, 3},
