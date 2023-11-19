@@ -189,9 +189,9 @@ function Tutorial_AddMainInterfaceSection()
     local ArrowPos_FindTroops = {581, 60};
     local ArrowPos_NewRes = {930, 60};
     local ArrowPos_Promote = {135, 690};
-    local ArrowPos_Military = {240, 674};
-    local ArrowPos_Slaves = {240, 686};
-    local ArrowPos_Civil = {240, 698};
+    local ArrowPos_Military = {240, 686};
+    local ArrowPos_Slaves = {240, 698};
+    local ArrowPos_Civil = {240, 674};
     local ArrowPos_Care = {240, 712};
 
     Tutorial.AddMessage {
@@ -239,12 +239,12 @@ function Tutorial_AddMainInterfaceSection()
         Arrow       = ArrowPos_Civil,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_12",
-        Arrow       = ArrowPos_Slaves,
-    }
-    Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainInterface_13",
         Arrow       = ArrowPos_Military,
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainInterface_12",
+        Arrow       = ArrowPos_Slaves,
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainInterface_14",
@@ -285,6 +285,8 @@ function Tutorial_AddCastleInterfaceSection()
     local ArrowPos_Measure = {362, 575};
     local ArrowPos_BuyNoble = {350, 700};
     local ArrowPos_Tax = {517, 692};
+    local ArrowPos_Measures_Row = {522, 635};
+    local ArrowPos_Measures_Bar = {522, 680};
 
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainCastle_1",
@@ -298,14 +300,6 @@ function Tutorial_AddCastleInterfaceSection()
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainCastle_3",
         Arrow       = ArrowPos_Treasury,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
-        end
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_4",
-        Arrow       = ArrowPos_Measure,
         Action      = function(_Data)
             GUI.ClearSelection();
             GUI.SelectEntity(GetID("HQ1"));
@@ -360,21 +354,50 @@ function Tutorial_AddCastleInterfaceSection()
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainCastle_12",
         Action      = function(_Data)
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainCastle_4",
+        Arrow       = ArrowPos_Measure,
+        Action      = function(_Data)
+            GUI.ClearSelection();
+            GUI.SelectEntity(GetID("HQ1"));
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainCastle_13",
+        Arrow       = ArrowPos_Measure,
+        Condition   = function(_Data)
+            local WidgetID = Stronghold.Building:GetLastSelectedHeadquarterTab(1);
+            return WidgetID == gvGUI_WidgetID.ToBuildingSettlersMenu;
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainCastle_14",
+        Arrow       = ArrowPos_Measures_Row,
+        Action      = function(_Data)
+            GUI.ClearSelection();
+            GUI.SelectEntity(GetID("HQ1"));
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainCastle_15",
+        Arrow       = ArrowPos_Measures_Bar,
+        Action      = function(_Data)
+            GUI.ClearSelection();
+            GUI.SelectEntity(GetID("HQ1"));
             Tutorial_AddHeroSelectedSection();
         end
     }
 end
 
 function Tutorial_AddHeroSelectedSection()
-    local Text = XGUIEng.GetStringTableText("sh_tutorial/ExplainCastle_13");
+    local Text = XGUIEng.GetStringTableText("sh_tutorial/ExplainCastle_16");
     Tutorial.AddMessage {
         Text        = string.format(Text, gvGender.Name, gvGender.Pronome[2]),
         Condition   = function(_Data)
             return IsEntitySelected(Stronghold:GetPlayerHero(1));
         end
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_14"
     }
 end
 
