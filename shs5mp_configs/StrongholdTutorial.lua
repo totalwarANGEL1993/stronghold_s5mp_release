@@ -608,14 +608,20 @@ function Tutorial_AddExplainBarracks()
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainRecruit_3",
         Condition   = function(_Data)
-            return Logic.GetNumberOfEntitiesOfTypeOfPlayer(1, Entities.PU_LeaderPoleArm1) > 0;
+            local LeaderList = Stronghold:GetLeadersOfType(1, 0);
+            for i= table.getn(LeaderList), 1, -1 do
+                if IsTraining(LeaderList[i]) then
+                    table.remove(LeaderList, i);
+                end
+            end
+            return table.getn(LeaderList) >= 3;
         end
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainRecruit_4",
         Action      = function(_Data)
             ReplaceEntity("BridgeBarrier", Entities.XD_Rock7);
-            DelinquentsCampActivateAttack(CampID, true);
+            DelinquentsCampActivateAttack(gvPlayer3Camp, true);
         end,
     }
 end
@@ -776,7 +782,7 @@ function CreatePlayer2Armies()
     AiArmyRefiller.AddArmy(gvP2HQSpawner, ArmyID);
 
     gvP2Army1 = AiArmyManager.Create(ArmyID);
-    AiArmyManager.AddAttackTargetPath(gvP2Army1, "P2AttackPath1", "PlayerHome");
+    AiArmyManager.AddAttackTargetPath(gvP2Army1, "P2OuterPos", "P2AttackPath1", "PlayerHome");
 
 
     for i= 2, 7 do
@@ -798,6 +804,7 @@ function CreatePlayer2Armies()
         AiArmyManager.AddGuardPosition(_G["gvP2Army"..i], "P2DefPos7");
         AiArmyManager.AddGuardPosition(_G["gvP2Army"..i], "P2DefPos8");
     end
+    --- @diagnostic disable-next-line: undefined-global
     AiArmyManager.Synchronize(gvP2Army2, gvP2Army3, gvP2Army4, gvP2Army5, gvP2Army6, gvP2Army7);
 
 
@@ -823,7 +830,7 @@ function CreatePlayer3()
         PlayerID        = 3,
         HomePosition    = "HQ3Spawn",
         Strength        = 7,
-        RodeLength      = 3000,
+        RodeLength      = 2500,
     };
     DelinquentsCampAddSpawner(CampID, "HQ3", 2*60, 1, Entities.PU_LeaderBow1);
     DelinquentsCampAddSpawner(CampID, "P3Tent1", 2*60, 1, Entities.PU_LeaderPoleArm1);
