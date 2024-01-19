@@ -1,6 +1,6 @@
 SHS5MP_RulesDefinition = {
     -- Config version (Always an integer)
-    Version = 7,
+    Version = 8,
 
     -- ###################################################################### --
     -- #                             CONFIG                                 # --
