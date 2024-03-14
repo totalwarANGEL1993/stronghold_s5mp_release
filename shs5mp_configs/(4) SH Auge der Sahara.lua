@@ -11,12 +11,7 @@ SHS5MP_RulesDefinition = {
     DisableDefaultWinCondition = false,
     -- Disable rule configuration?
     DisableRuleConfiguration = false;
-    -- Disable game start timer?
-    -- (Requires rule config to be disabled!)
-    DisableGameStartTimer = false;
 
-    -- Peacetime in minutes
-    PeaceTime = 0,
     -- Open up named gates on the map.
     -- (PTGate1, PTGate2, ...)
     PeaceTimeOpenGates = true,
@@ -76,8 +71,10 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game start timer is over
     OnGameStart = function()
-        ForbidTechnology(Technologies.B_Palisade, 1);
-        ForbidTechnology(Technologies.B_Wall, 1);
+        for i= 1, 4 do
+            ForbidTechnology(Technologies.B_Palisade, i);
+            ForbidTechnology(Technologies.B_Wall, i);
+        end
         SetupProvinces();
         SetupCamps();
     end,
@@ -92,6 +89,7 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("DesertWeatherSet");
     end,
 }
 
@@ -167,7 +165,7 @@ end
 function SetupCampsWS0()
     for j= 1, 2 do
         local CampID = DelinquentsCampCreate {
-            HomePosition = "Province" ..j.. "Pos",
+            HomePosition = "Province" ..j.. "DefPos",
             RodeLength = 2500,
             Strength = 7,
         };
@@ -192,7 +190,7 @@ end
 function SetupCampsWS10()
     for j= 1, 2 do
         local CampID = DelinquentsCampCreate {
-            HomePosition = "Province" ..j.. "Pos",
+            HomePosition = "Province" ..j.. "DefPos",
             RodeLength = 2500,
             Strength = 7,
         };

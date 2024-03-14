@@ -1,6 +1,6 @@
 SHS5MP_RulesDefinition = {
     -- Config version (Always an integer)
-    Version = 2,
+    Version = 1,
 
     -- ###################################################################### --
     -- #                             CONFIG                                 # --
@@ -11,15 +11,15 @@ SHS5MP_RulesDefinition = {
     DisableDefaultWinCondition = false,
     -- Disable rule configuration?
     DisableRuleConfiguration = true;
-    -- Disable game start timer?
-    -- (Requires rule config to be disabled!)
-    DisableGameStartTimer = false;
 
     -- Peacetime in minutes
     PeaceTime = 0,
     -- Open up named gates on the map.
     -- (PTGate1, PTGate2, ...)
     PeaceTimeOpenGates = true,
+
+    -- Serfs
+    StartingSerfs = 6,
 
     -- Fill resource piles with resources
     -- (value of resources or 0 to not change)
@@ -91,6 +91,7 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("EuropeanWeatherSet");
     end,
 }
 

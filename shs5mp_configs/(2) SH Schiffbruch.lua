@@ -15,8 +15,6 @@ SHS5MP_RulesDefinition = {
     -- (Requires rule config to be disabled!)
     DisableGameStartTimer = false;
 
-    -- Peacetime in minutes
-    PeaceTime = 0,
     -- Open up named gates on the map.
     -- (PTGate1, PTGate2, ...)
     PeaceTimeOpenGates = true,
@@ -70,7 +68,7 @@ SHS5MP_RulesDefinition = {
     -- Called when map is loaded
     OnMapStart = function()
         UseWeatherSet("HighlandsWeatherSet");
-        AddPeriodicSummer(360);
+        AddPeriodicSummer(350);
         AddPeriodicRain(90);
         LocalMusic.UseSet = HIGHLANDMUSIC;
 
@@ -79,23 +77,22 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game start timer is over
     OnGameStart = function()
-        SetHostile(1, 7);
-        SetHostile(2, 7);
+        ForbidTechnology(Technologies.B_PowerPlant, 1);
+        ForbidTechnology(Technologies.B_PowerPlant, 2);
         CreateBanditCamps();
-
-        for i= 1, 4 do
-            CreateWoodPile("WoodPile" ..i, 1200);
-        end
 
         StartCountdown(15 * 60, MakeBanditCampsAttack, false);
     end,
 
     -- Called after peacetime is over
     OnPeaceTimeOver = function()
+        AllowTechnology(Technologies.B_PowerPlant, 1);
+        AllowTechnology(Technologies.B_PowerPlant, 2);
     end,
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("HighlandsWeatherSet");
     end,
 }
 
@@ -127,11 +124,11 @@ function CreateBanditCamps()
 
         local CampID = DelinquentsCampCreate {
             HomePosition = "VCCamp" ..Index.. "Center",
-            Strength = 9,
+            Strength = 10,
         };
         _G["gvBanditCamp" ..Index] = CampID;
 
-        for j= 1, 5 do
+        for j= 1, 6 do
             DelinquentsCampAddSpawner(
                 CampID, "VCCamp" ..Index.. "Tent" ..j, 60, 1,
                 Entities.CU_BanditLeaderSword2,
@@ -153,7 +150,9 @@ function CreateBanditCamps()
 end
 
 function MakeBanditCampsAttack()
+    --- @diagnostic disable-next-line: undefined-global
     DelinquentsCampActivateAttack(gvBanditCamp2, true);
+    --- @diagnostic disable-next-line: undefined-global
     DelinquentsCampActivateAttack(gvBanditCamp4, true);
 end
 

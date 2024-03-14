@@ -1,6 +1,6 @@
 SHS5MP_RulesDefinition = {
     -- Config version (Always an integer)
-    Version = 4,
+    Version = 3,
 
     -- ###################################################################### --
     -- #                             CONFIG                                 # --
@@ -11,9 +11,6 @@ SHS5MP_RulesDefinition = {
     DisableDefaultWinCondition = false,
     -- Disable rule configuration?
     DisableRuleConfiguration = true;
-    -- Disable game start timer?
-    -- (Requires rule config to be disabled!)
-    DisableGameStartTimer = true;
 
     -- Peacetime in minutes
     PeaceTime = 0,
@@ -99,6 +96,7 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("EuropeanWeatherSet");
     end,
 }
 

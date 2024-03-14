@@ -1,6 +1,6 @@
 SHS5MP_RulesDefinition = {
     -- Config version (Always an integer)
-    Version = 8,
+    Version = 7,
 
     -- ###################################################################### --
     -- #                             CONFIG                                 # --
@@ -11,12 +11,7 @@ SHS5MP_RulesDefinition = {
     DisableDefaultWinCondition = false,
     -- Disable rule configuration?
     DisableRuleConfiguration = false;
-    -- Disable game start timer?
-    -- (Requires rule config to be disabled!)
-    DisableGameStartTimer = false;
 
-    -- Peacetime in minutes
-    PeaceTime = 0,
     -- Open up named gates on the map.
     -- (PTGate1, PTGate2, ...)
     PeaceTimeOpenGates = true,
@@ -131,6 +126,7 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("HighlandsWeatherSet");
     end,
 }
 

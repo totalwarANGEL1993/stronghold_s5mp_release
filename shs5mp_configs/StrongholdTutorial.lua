@@ -1,6 +1,6 @@
 SHS5MP_RulesDefinition = {
     -- Config version (Always an integer)
-    Version = 4,
+    Version = 3,
 
     -- ###################################################################### --
     -- #                             CONFIG                                 # --
@@ -11,9 +11,6 @@ SHS5MP_RulesDefinition = {
     DisableDefaultWinCondition = true,
     -- Disable rule configuration?
     DisableRuleConfiguration = true;
-    -- Disable game start timer?
-    -- (Requires rule config to be disabled!)
-    DisableGameStartTimer = true;
 
     -- Peacetime in minutes
     PeaceTime = 0,
@@ -85,21 +82,17 @@ SHS5MP_RulesDefinition = {
 
         Tutorial.Install();
         LockRank(1, 0);
-        ForbidTechnology(Technologies.B_MasterBuilderWorkshop, 1);
-        ForbidTechnology(Technologies.B_Palisade, 1);
-        ForbidTechnology(Technologies.B_PowerPlant, 1);
-        ForbidTechnology(Technologies.B_Wall, 1);
         ForbidTechnology(Technologies.T_FreeCamera, 1);
 
-        ChangePlayer("HQ1", 8);
-        Tools.CreateSoldiersForLeader(GetID("Scout"), 3);
-        for k,v in pairs(GetPlayerEntities(1, Entities.PU_Serf)) do
-            Logic.SuspendEntity(v);
-        end
+        LockPlayerRight(1, PlayerRight.Scout);
+        LockPlayerRight(1, PlayerRight.Thief);
+        LockPlayerRight(1, PlayerRight.ArchitectShop);
+        LockPlayerRight(1, PlayerRight.PowerPlant);
 
+        gvTutorial_Skip = false;
         BriefingTutorialIntro();
         Tutorial_OverwriteCallbacks();
-        Tutorial_CreateProvince()
+        Tutorial_CreateProvince();
 
         CreatePlayer2();
         CreatePlayer3();
@@ -107,6 +100,9 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game start timer is over
     OnGameStart = function()
+        ChangePlayer("HQ1", 8);
+        Tools.CreateSoldiersForLeader(GetID("Scout"), 3);
+        SetupAiPlayer(2, 0, 0);
     end,
 
     -- Called after peacetime is over
@@ -115,6 +111,7 @@ SHS5MP_RulesDefinition = {
 
     -- Called after game has been loaded (singleplayer)
     OnSaveLoaded = function()
+        UseWeatherSet("EuropeanWeatherSet");
     end,
 }
 
@@ -138,19 +135,35 @@ function Tutorial_OverwriteCallbacks()
     -- For selecting the hero
     Overwrite.CreateOverwrite("GameCallback_Logic_BuyHero_OnHeroSelected", function(_PlayerID, _EntityID, _Type)
         Overwrite.CallOriginal();
-        gvTutorial_HeroSelected = true;
         local TypeName = Logic.GetEntityTypeName(_Type);
         gvGender.Name = XGUIEng.GetStringTableText("Names/" ..TypeName);
         if GetGender(_Type) == Gender.Female then
             gvGender.Pronome = {"sie", "sie", "ihr", "ihre"};
             gvGender.Address = "Milady";
         end
+        gvTutorial_HeroSelected = true;
     end);
 
     -- For claiming a province
     Overwrite.CreateOverwrite("GameCallback_SH_Logic_OnProvinceClaimed", function(_PlayerID, _ProvinceID, _BuildingID)
         Overwrite.CallOriginal();
         gvTutorial_ProvinceClaimed = true;
+    end);
+
+    -- For when player runs in a trap
+    Overwrite.CreateOverwrite("GameCallback_SH_Logic_OnSpawnTrapTriggered", function(_PlayerID, _Type, _X, _Y, ...)
+        Overwrite.CallOriginal();
+        if _PlayerID == 2 or _PlayerID == 3 then
+            gvTutorial_OnEnemyTrapActivated = true;
+        end
+    end);
+
+    -- For when player runs in a trap
+    Overwrite.CreateOverwrite("GameCallback_SH_Logic_OnAoETrapTriggered", function(_PlayerID, _Type, _X, _Y)
+        Overwrite.CallOriginal();
+        if _PlayerID == 2 or _PlayerID == 3 then
+            gvTutorial_OnEnemyTrapActivated = true;
+        end
     end);
 end
 
@@ -189,191 +202,218 @@ function Tutorial_AddMainInterfaceSection()
     local ArrowPos_NewRes = {930, 60};
     local ArrowPos_Promote = {135, 690};
     local ArrowPos_Military = {240, 674};
-    local ArrowPos_Slaves = {240, 686};
-    local ArrowPos_Civil = {240, 698};
+    local ArrowPos_Slaves = {240, 698};
+    local ArrowPos_Civil = {240, 686};
     local ArrowPos_Care = {240, 712};
 
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_1",
+        Text         = "sh_tutorial/ExplainInterface_1",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_2",
+        Text         = "sh_tutorial/ExplainInterface_2",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_3",
+        Text         = "sh_tutorial/ExplainInterface_3",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_4",
+        Text         = "sh_tutorial/ExplainInterface_4",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_5",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_NewRes,
+        Text         = "sh_tutorial/ExplainInterface_5",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_NewRes,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_6",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_NewRes,
+        Text         = "sh_tutorial/ExplainInterface_6",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_NewRes,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_7",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_NewRes,
+        Text         = "sh_tutorial/ExplainInterface_7",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_NewRes,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_8",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_NewRes,
+        Text         = "sh_tutorial/ExplainInterface_8",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_NewRes,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_9",
-        Arrow       = ArrowPos_Promote,
+        Text         = "sh_tutorial/ExplainInterface_9",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Promote,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_10",
-        Arrow       = ArrowPos_Care,
+        Text         = "sh_tutorial/ExplainInterface_10",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Care,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_11",
-        Arrow       = ArrowPos_Civil,
+        Text         = "sh_tutorial/ExplainInterface_13",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Military,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_12",
-        Arrow       = ArrowPos_Slaves,
+        Text         = "sh_tutorial/ExplainInterface_11",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Civil,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_13",
-        Arrow       = ArrowPos_Military,
+        Text         = "sh_tutorial/ExplainInterface_12",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Slaves,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_14",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_Clock,
+        Text         = "sh_tutorial/ExplainInterface_14",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_Clock,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_15",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_Clock,
+        Text         = "sh_tutorial/ExplainInterface_15",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_Clock,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_16",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_Clock,
+        Text         = "sh_tutorial/ExplainInterface_16",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_Clock,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_17",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_FindSerf,
+        Text         = "sh_tutorial/ExplainInterface_17",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_FindSerf,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainInterface_18",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_FindTroops,
+        Text         = "sh_tutorial/ExplainInterface_18",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_FindTroops,
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainInterface_19",
+        ClickCatcher = true,
         Action      = function(_Page)
             ChangePlayer("HQ1", 1);
         end,
     }
 end
--- Sound.Play2DSound( Sounds.Smith01,0 )
+
 function Tutorial_AddCastleInterfaceSection()
     local ArrowPos_RallyPoint = {675, 625};
-    local ArrowPos_Treasury = {317, 575};
-    local ArrowPos_Measure = {362, 575};
+    local ArrowPos_Treasury = {668, 575};
+    local ArrowPos_Measure = {698, 575};
     local ArrowPos_BuyNoble = {350, 700};
     local ArrowPos_Tax = {517, 692};
+    local ArrowPos_Measures_Row = {522, 635};
+    local ArrowPos_Measures_Bar = {522, 680};
 
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_1",
-        Condition   = function(_Page)
+        Text         = "sh_tutorial/ExplainCastle_1",
+        Condition    = function(_Page)
             return IsEntitySelected("HQ1");
-        end,
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_2",
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_3",
-        Arrow       = ArrowPos_Treasury,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_4",
-        Arrow       = ArrowPos_Measure,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
-        end
+        Text         = "sh_tutorial/ExplainCastle_2",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_5",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_Tax,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
-        end
+        Text         = "sh_tutorial/ExplainCastle_3",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Treasury,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_6",
-        Arrow       = ArrowPos_RallyPoint,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
-        end
+        Text         = "sh_tutorial/ExplainCastle_5",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_Tax,
+    }
+    Tutorial.AddMessage {
+        Text         = "sh_tutorial/ExplainCastle_6",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_RallyPoint,
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainCastle_7",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_8",
-        Condition   = function(_Data)
+        Text         = "sh_tutorial/ExplainCastle_8",
+        Condition    = function(_Data)
             return gvTutorial_RallyPointSet;
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_9",
+        Text         = "sh_tutorial/ExplainCastle_9",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_10",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_BuyNoble,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("HQ1"));
-        end
+        Text         = "sh_tutorial/ExplainCastle_10",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_BuyNoble,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_11",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_BuyNoble,
-        Condition   = function(_Data)
+        Text         = "sh_tutorial/ExplainCastle_11",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_BuyNoble,
+        Condition    = function(_Data)
             return gvTutorial_HeroSelected;
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_12",
-        Action      = function(_Data)
+        Text         = "sh_tutorial/ExplainCastle_12",
+        ClickCatcher = true,
+        Action       = function(_Data)
             Tutorial_AddHeroSelectedSection();
         end
+    }
+    Tutorial.AddMessage {
+        Text         = "sh_tutorial/ExplainCastle_4",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Measure,
+    }
+    Tutorial.AddMessage {
+        Text         = "sh_tutorial/ExplainCastle_13",
+        Arrow        = ArrowPos_Measure,
+        ClickCatcher = true,
+        Condition    = function(_Data)
+            local WidgetID = Stronghold.Building:GetLastSelectedHeadquarterTab(1);
+            return WidgetID == gvGUI_WidgetID.ToBuildingSettlersMenu;
+        end,
+    }
+    Tutorial.AddMessage {
+        Text         = "sh_tutorial/ExplainCastle_14",
+        Arrow        = ArrowPos_Measures_Row,
+        ClickCatcher = true,
+    }
+    Tutorial.AddMessage {
+        Text         = "sh_tutorial/ExplainCastle_15",
+        Arrow        = ArrowPos_Measures_Bar,
+        ClickCatcher = true,
     }
 end
 
 function Tutorial_AddHeroSelectedSection()
-    local Text = XGUIEng.GetStringTableText("sh_tutorial/ExplainCastle_13");
+    local Text = XGUIEng.GetStringTableText("sh_tutorial/ExplainCastle_16");
     Tutorial.AddMessage {
-        Text        = string.format(Text, gvGender.Name, gvGender.Pronome[2]),
-        Condition   = function(_Data)
-            return IsEntitySelected(Stronghold:GetPlayerHero(1));
+        Text         = string.format(Text, gvGender.Name, gvGender.Pronome[2]),
+        Condition    = function(_Data)
+            return IsEntitySelected(GetNobleID(1));
         end
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainCastle_14"
     }
 end
 
@@ -382,7 +422,7 @@ end
 function Tutorial_StartPart2()
     Tutorial.Stop();
     Tutorial.SetCallback(function()
-        Job.Second(Tutorial_StartPart3Trigger);
+        Job.Second(Tutorial_StartOutpostTrigger);
     end);
     Tutorial_AddUnitSelectionSection();
     Tutorial_AddProvisionSection();
@@ -402,7 +442,8 @@ function Tutorial_AddUnitSelectionSection()
     local ArrowPos_Commands = {380, 700};
 
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_1",
+        Text         = "sh_tutorial/ExplainUnit_1",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainUnit_2",
@@ -411,93 +452,68 @@ function Tutorial_AddUnitSelectionSection()
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_3",
-        ArrowWidget = "TutorialArrowUp",
-        Arrow       = ArrowPos_Commands,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_3",
+        ClickCatcher = true,
+        ArrowWidget  = "TutorialArrowUp",
+        Arrow        = ArrowPos_Commands,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_4",
-        Arrow       = ArrowPos_BuySoldier,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_4",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_BuySoldier,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_5",
-        Arrow       = ArrowPos_Health,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_5",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Health,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_6",
-        Arrow       = ArrowPos_Experience,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_6",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Experience,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_7",
-        Arrow       = ArrowPos_TroopSize,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_7",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_TroopSize,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_8",
-        Arrow       = ArrowPos_Armor,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_8",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Armor,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_9",
-        Arrow       = ArrowPos_Damage,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_9",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Damage,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_10",
-        Arrow       = ArrowPos_Upkeep,
-        ArrowWidget = "TutorialArrowRight",
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_10",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Upkeep,
+        ArrowWidget  = "TutorialArrowRight",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainUnit_11",
-        Arrow       = ArrowPos_Expel,
-        Action      = function(_Data)
-            GUI.ClearSelection();
-            GUI.SelectEntity(GetID("Scout"));
-        end
+        Text         = "sh_tutorial/ExplainUnit_11",
+        ClickCatcher = true,
+        Arrow        = ArrowPos_Expel,
     }
 end
 
 function Tutorial_AddProvisionSection()
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_1",
+        Text         = "sh_tutorial/ExplainManage_1",
+        ClickCatcher = true,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_2",
-        Action      = function(_Data)
+        Text         = "sh_tutorial/ExplainManage_2",
+        ClickCatcher = true,
+        Action       = function(_Data)
             Logic.ResumeAllEntities();
             AddResourcesToPlayer(1, {
                 [ResourceType.GoldRaw]   = 1500,
@@ -509,23 +525,34 @@ function Tutorial_AddProvisionSection()
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainManage_3",
-        Action      = function(_Data)
-            local Position = GetPosition("ClayMinePointer");
-            gvTutorial_ClayMinePointer = Logic.CreateEffect(GGL_Effects.FXTerrainPointer, Position.X, Position.Y, 0);
-        end,
         Condition   = function(_Data)
-            local n, ID = Logic.GetEntities(Entities.PB_ClayMine1, 1);
-            return n > 0 and Logic.IsConstructionComplete(ID) == 1;
+            local SerfAmount = Logic.GetNumberOfEntitiesOfTypeOfPlayer(1, Entities.PU_Serf);
+            return SerfAmount >= 18;
         end
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainManage_4",
         Action      = function(_Data)
+            local Position = GetPosition("ClayMinePointer");
+            gvTutorial_ClayMinePointer = Logic.CreateEffect(GGL_Effects.FXTerrainPointer, Position.X, Position.Y, 0);
+        end,
+        Condition   = function(_Data)
+            local _, ID1 = Logic.GetPlayerEntities(1, Entities.PB_ClayMine1, 1);
+            local _, ID2 = Logic.GetPlayerEntities(1, Entities.PB_ClayMine2, 1);
+            local _, ID3 = Logic.GetPlayerEntities(1, Entities.PB_ClayMine3, 1);
+            return (ID1 and Logic.IsConstructionComplete(ID1) == 1) or
+                   (ID2 and Logic.IsConstructionComplete(ID2) == 1) or
+                   (ID3 and Logic.IsConstructionComplete(ID3) == 1);
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_5",
+        Action      = function(_Data)
             Logic.DestroyEffect(gvTutorial_ClayMinePointer);
         end,
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_5",
+        Text        = "sh_tutorial/ExplainManage_6",
         Condition   = function(_Data)
             local NoFarm = Logic.GetNumberOfWorkerWithoutEatPlace(1);
             local NoHouse = Logic.GetNumberOfWorkerWithoutSleepPlace(1);
@@ -533,10 +560,10 @@ function Tutorial_AddProvisionSection()
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_6",
+        Text        = "sh_tutorial/ExplainManage_7",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_7",
+        Text        = "sh_tutorial/ExplainManage_8",
         Condition   = function(_Data)
             local WorkerCount = Logic.GetNumberOfAttractedWorker(1);
             local Reputation = GetReputationIncome(1);
@@ -544,21 +571,16 @@ function Tutorial_AddProvisionSection()
         end
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_8",
+        Text        = "sh_tutorial/ExplainManage_9",
     }
     Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_9",
+        Text        = "sh_tutorial/ExplainManage_10",
         Action      = function(_Data)
             LockRank(1, 8);
         end,
         Condition   = function(_Data)
-            if GetRank(1) >= 1 then
-                return true;
-            end
+            return GetRank(1) >= 1;
         end
-    }
-    Tutorial.AddMessage {
-        Text        = "sh_tutorial/ExplainManage_10",
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainManage_11",
@@ -566,16 +588,68 @@ function Tutorial_AddProvisionSection()
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainManage_12",
     }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_13",
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_14",
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_15",
+        Condition   = function(_Data)
+            local _, ID1 = Logic.GetPlayerEntities(1, Entities.PB_Monastery1, 1);
+            local _, ID2 = Logic.GetPlayerEntities(1, Entities.PB_Monastery2, 1);
+            local _, ID3 = Logic.GetPlayerEntities(1, Entities.PB_Monastery3, 1);
+            return (ID1 and Logic.IsConstructionComplete(ID1) == 1) or
+                   (ID2 and Logic.IsConstructionComplete(ID2) == 1) or
+                   (ID3 and Logic.IsConstructionComplete(ID3) == 1);
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_16",
+        Condition   = function(_Data)
+            return GetRank(1) >= 2;
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_17",
+        Condition   = function(_Data)
+            local _, ID1 = Logic.GetPlayerEntities(1, Entities.PB_Headquarters2, 1);
+            local _, ID2 = Logic.GetPlayerEntities(1, Entities.PB_Headquarters3, 1);
+            return (ID1 and Logic.IsConstructionComplete(ID1) == 1) or
+                   (ID2 and Logic.IsConstructionComplete(ID2) == 1);
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_18",
+        Condition   = function(_Data)
+            local _, ID1 = Logic.GetPlayerEntities(1, Entities.PB_University1, 1);
+            local _, ID2 = Logic.GetPlayerEntities(1, Entities.PB_University2, 1);
+            return (ID1 and Logic.IsConstructionComplete(ID1) == 1) or
+                   (ID2 and Logic.IsConstructionComplete(ID2) == 1);
+        end
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_19",
+        Action      = function(_Data)
+            local Position = GetPosition("P2AttackPath3");
+            Tools.ExploreArea(Position.X, Position.Y, 10);
+            Camera.ScrollSetLookAt(Position.X, Position.Y);
+        end,
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainManage_20",
+    }
 end
 
 function Tutorial_AddExplainBarracks()
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainRecruit_1",
         Condition   = function(_Data)
-            local Barracks = GetPlayerEntities(1, Entities.PB_Barracks1);
-            if Barracks[1] and Logic.IsConstructionComplete(Barracks[1]) == 1 then
-                return true;
-            end
+            local _, ID1 = Logic.GetPlayerEntities(1, Entities.PB_Barracks1, 1);
+            local _, ID2 = Logic.GetPlayerEntities(1, Entities.PB_Barracks2, 1);
+            return (ID1 and Logic.IsConstructionComplete(ID1) == 1) or
+                   (ID2 and Logic.IsConstructionComplete(ID2) == 1);
         end
     }
     Tutorial.AddMessage {
@@ -595,6 +669,9 @@ function Tutorial_AddExplainBarracks()
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainRecruit_4",
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainRecruit_5",
         Action      = function(_Data)
             ReplaceEntity("BridgeBarrier", Entities.XD_Rock7);
             DelinquentsCampActivateAttack(gvPlayer3Camp, true);
@@ -604,40 +681,100 @@ end
 
 -- Part 3 ------------------------------------------------------------------- --
 
-function Tutorial_StartPart3()
+function Tutorial_StartOutpost()
     Tutorial.Stop();
     Tutorial.SetCallback(function()
-        Job.Second(Tutorial_StartPart4Trigger);
+        Job.Second(Tutorial_StartTrapTrigger);
+        Job.Second(Tutorial_StartClosedPitTrigger);
+        Job.Second(Tutorial_EpilogeTrigger);
         MakeVulnerable("P3Tower");
     end);
 
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainProvince_1",
+        Action      = function(_Data)
+            local Position = GetPosition("VillagePos");
+            Tools.ExploreArea(Position.X, Position.Y, 10);
+            Camera.ScrollSetLookAt(Position.X, Position.Y);
+        end,
     }
     Tutorial.AddMessage {
         Text        = "sh_tutorial/ExplainProvince_2",
-        Condition   = function(_Data)
-            return Logic.GetNumberOfEntitiesOfTypeOfPlayer(1, Entities.PB_VillageCenter1) > 0 or
-                   Logic.GetNumberOfEntitiesOfTypeOfPlayer(1, Entities.PB_VillageCenter2) > 0 or
-                   Logic.GetNumberOfEntitiesOfTypeOfPlayer(1, Entities.PB_VillageCenter3) > 0;
-        end
     }
 
     Tutorial.Start();
 end
 
-function Tutorial_StartPart3Trigger()
+function Tutorial_StartOutpostTrigger()
     local x,y,z = Logic.EntityGetPos(GetID("VillagePos"));
     local Amount = Logic.GetPlayerEntitiesInArea(1, 0, x, y, 1500, 16);
     if Amount > 1 then
-        Tutorial_StartPart3();
+        Tutorial_StartOutpost();
         return true;
     end
 end
 
--- Part 4 ------------------------------------------------------------------- --
+function Tutorial_StartTrap()
+    Tutorial.Stop();
+    Tutorial.SetCallback(function()
+        UnlockPlayerRight(1, PlayerRight.Thief);
+    end);
 
-function Tutorial_StartPart4()
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainTrap_1",
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainTrap_2",
+        Action      = function(_Data)
+            gvTutorial_OnTrapTutorialOver = true;
+        end,
+    }
+    Tutorial.Start();
+end
+
+function Tutorial_StartTrapTrigger()
+    if  not gvTutorial_OnTrapTutorialOver
+    and gvTutorial_OnEnemyTrapActivated then
+        Tutorial_StartTrap();
+        return true;
+    end
+end
+
+function Tutorial_StartClosedPit()
+    Tutorial.Stop();
+    Tutorial.SetCallback(function()
+        Job.Second(Tutorial_EpilogeTrigger);
+        UnlockPlayerRight(1, PlayerRight.Scout);
+    end);
+
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainScout_1",
+        Action      = function(_Data)
+            local Position = GetPosition("ClosedPit1Pos");
+            Tools.ExploreArea(Position.X, Position.Y, 10);
+            Camera.ScrollSetLookAt(Position.X, Position.Y);
+        end,
+    }
+    Tutorial.AddMessage {
+        Text        = "sh_tutorial/ExplainScout_2",
+        Action      = function(_Data)
+            gvTutorial_OnPitTutorialOver = true;
+        end,
+    }
+    Tutorial.Start();
+end
+
+function Tutorial_StartClosedPitTrigger()
+    if  not gvTutorial_OnPitTutorialOver
+    and AreEntitiesInArea(1, 0, GetPosition("ClosedPit1Pos"), 8000, 1) then
+        Tutorial_StartClosedPit();
+        return true;
+    end
+end
+
+-- End ---------------------------------------------------------------------- --
+
+function Tutorial_Epiloge()
     Tutorial.Stop();
     Tutorial.SetCallback(function()
         BriefingGuardian1Npc();
@@ -656,9 +793,9 @@ function Tutorial_StartPart4()
     Tutorial.Start();
 end
 
-function Tutorial_StartPart4Trigger()
-    if not IsExisting("HQ3") then
-        Tutorial_StartPart4();
+function Tutorial_EpilogeTrigger()
+    if not IsExisting("HQ3") and gvTutorial_OnTrapTutorialOver and gvTutorial_OnPitTutorialOver then
+        Tutorial_Epiloge();
         return true;
     end
 end
@@ -675,13 +812,32 @@ end
 
 function Tutorial_CheckVictory()
     if not IsExisting("Scorillo") then
-        -- Not a stronghold AI so nuke manually.
-        for k,v in pairs(GetPlayerEntities(2,0)) do
-            DestroyEntity(v);
-        end
         Victory(1);
         return true;
     end
+end
+
+function Tutorial_SkipExplainations()
+    -- Prepare player 1
+    for k,v in pairs(GetPlayerEntities(1, Entities.PU_Serf)) do
+        Logic.ResumeEntity(v);
+    end
+    DestroyEntity("Scout");
+    ChangePlayer("HQ1", 1);
+    LockRank(1, 8);
+    UnlockPlayerRight(1, PlayerRight.Scout);
+    UnlockPlayerRight(1, PlayerRight.Thief);
+    Tools.GiveResouces(1, 5000, 4000, 2500, 3000, 3000, 3000);
+    AddHonor(1, 1000);
+    -- Delete player 3
+    for k,v in pairs(GetPlayerEntities(3, 0)) do
+        DestroyEntity(v);
+    end
+    -- Start post tutorial content
+    ReplaceEntity("BridgeBarrier", Entities.XD_Rock7);
+    ReplaceEntity("GateDude", Entities.CU_PoleArmIdle);
+    BriefingGuardian1Npc();
+    Job.Second(Tutorial_CheckVictory);
 end
 
 -- ########################################################################## --
@@ -699,21 +855,32 @@ function CreatePlayer2Spawner()
     gvP2HQSpawner       = AiArmyRefiller.CreateSpawner {
         ScriptName      = "HQ2",
         SpawnPoint      = "HQ2Spawn",
-        SpawnAmount     = 3,
+        SpawnAmount     = 4,
         SpawnTimer      = 3*60,
         AllowedTypes    = {
-            {Entities.CU_BlackKnight_LeaderMace2, 3},
+            {Entities.CU_BlackKnight_LeaderMace1, 3},
         }
     };
 
-    gvP2BarracksSpawner = AiArmyRefiller.CreateSpawner {
+    gvP2Barracks1Spawner = AiArmyRefiller.CreateSpawner {
         ScriptName      = "P2Barracks1",
         SpawnPoint      = "P2Barracks1Spawn",
-        SpawnAmount     = 1,
+        SpawnAmount     = 2,
         SpawnTimer      = 3*60,
         AllowedTypes    = {
-            {Entities.PU_LeaderPoleArm2, 3},
-            {Entities.PU_LeaderSword3, 3},
+            {Entities.PU_LeaderPoleArm4, 3},
+            {Entities.PU_LeaderSword4, 3},
+        }
+    };
+
+    gvP2Barracks2Spawner = AiArmyRefiller.CreateSpawner {
+        ScriptName      = "P2Barracks2",
+        SpawnPoint      = "P2Barracks2Spawn",
+        SpawnAmount     = 2,
+        SpawnTimer      = 3*60,
+        AllowedTypes    = {
+            {Entities.PU_LeaderPoleArm4, 3},
+            {Entities.PU_LeaderSword4, 3},
         }
     };
 
@@ -723,7 +890,7 @@ function CreatePlayer2Spawner()
         SpawnAmount     = 2,
         SpawnTimer      = 3*60,
         AllowedTypes    = {
-            {Entities.PU_LeaderBow2, 3},
+            {Entities.PU_LeaderRifle2, 3},
             {Entities.PU_LeaderBow3, 3},
         }
     };
@@ -731,60 +898,60 @@ function CreatePlayer2Spawner()
     gvP2StableSpawner   = AiArmyRefiller.CreateSpawner {
         ScriptName      = "P2Stable1",
         SpawnPoint      = "P2Stable1Spawn",
-        SpawnAmount     = 1,
+        SpawnAmount     = 2,
         SpawnTimer      = 3*60,
         AllowedTypes    = {
-            {Entities.PU_LeaderHeavyCavalry1, 3},
+            {Entities.PU_LeaderCavalry2, 3},
+            {Entities.PU_LeaderHeavyCavalry2, 3},
         }
     };
 
     gvP2FoundrySpawner  = AiArmyRefiller.CreateSpawner {
         ScriptName      = "P2Foundry1",
         SpawnPoint      = "P2Foundry1Spawn",
-        SpawnAmount     = 3,
+        SpawnAmount     = 2,
         SpawnTimer      = 3*60,
         AllowedTypes    = {
-            {Entities.PV_Cannon1, 0},
+            {Entities.PV_Cannon3, 0},
+            {Entities.PV_Cannon4, 0},
         }
     };
 end
 
 function CreatePlayer2Armies()
-    local ArmyID = AiArmy.New(2, 8, GetPosition("P2OuterPos"), 3000);
+    local ArmyID = AiArmy.New(2, 16, GetPosition("P2OuterPos"), 3000);
     AiArmy.SetAllowedTypes(ArmyID, {
-        {Entities.CU_BlackKnight_LeaderMace2, 3},
-        {Entities.CU_BlackKnight_LeaderMace2, 3},
-        {Entities.PU_LeaderPoleArm2, 3},
-        {Entities.PU_LeaderSword3, 3},
-        {Entities.PU_LeaderBow2, 3},
+        {Entities.CU_BlackKnight_LeaderMace1, 3},
+        {Entities.PU_LeaderSword4, 3},
         {Entities.PU_LeaderBow3, 3},
-        {Entities.PU_LeaderHeavyCavalry1, 3},
-        {Entities.PV_Cannon1, 0},
+        {Entities.PU_LeaderHeavyCavalry2, 3},
+        {Entities.PV_Cannon4, 0},
     });
     gvP2Army1 = ArmyID;
     AiArmy.SetFormationController(ArmyID, CustomTroopFomrationController);
-    AiArmyRefiller.AddArmy(gvP2BarracksSpawner, ArmyID);
+    AiArmyRefiller.AddArmy(gvP2Barracks1Spawner, ArmyID);
+    AiArmyRefiller.AddArmy(gvP2Barracks2Spawner, ArmyID);
     AiArmyRefiller.AddArmy(gvP2ArcherySpawner, ArmyID);
     AiArmyRefiller.AddArmy(gvP2StableSpawner, ArmyID);
     AiArmyRefiller.AddArmy(gvP2FoundrySpawner, ArmyID);
     AiArmyRefiller.AddArmy(gvP2HQSpawner, ArmyID);
     Job.Second(ControllPlayer2Attacker, ArmyID);
 
-    for i= 2, 7 do
-        ArmyID = AiArmy.New(2, 3, GetPosition("P2DefPos1"), 5000);
+    for i= 2, 8 do
+        local Positions = {6,"P2DefPos1","P2DefPos2","P2DefPos3","P2DefPos4","P2DefPos5","P2DefPos6"};
+        local Position = GetPosition(Positions[math.random(1, Positions[1]) +1]);
+        ArmyID = AiArmy.New(2, 8, Position, 5000);
         AiArmy.SetAllowedTypes(ArmyID, {
-            {Entities.CU_BlackKnight_LeaderMace2, 3},
-            {Entities.CU_BlackKnight_LeaderMace2, 3},
-            {Entities.PU_LeaderPoleArm2, 3},
-            {Entities.PU_LeaderSword3, 3},
-            {Entities.PU_LeaderBow2, 3},
-            {Entities.PU_LeaderBow3, 3},
-            {Entities.PU_LeaderHeavyCavalry1, 3},
-            {Entities.PV_Cannon1, 0},
+            {Entities.CU_BlackKnight_LeaderMace1, 3},
+            {Entities.PU_LeaderPoleArm4, 3},
+            {Entities.PU_LeaderRifle2, 3},
+            {Entities.PU_LeaderCavalry2, 3},
+            {Entities.PV_Cannon3, 0},
         });
         _G["gvP2Army"..i] = ArmyID;
         AiArmy.SetFormationController(ArmyID, CustomTroopFomrationController);
-        AiArmyRefiller.AddArmy(gvP2BarracksSpawner, ArmyID);
+        AiArmyRefiller.AddArmy(gvP2Barracks1Spawner, ArmyID);
+        AiArmyRefiller.AddArmy(gvP2Barracks2Spawner, ArmyID);
         AiArmyRefiller.AddArmy(gvP2ArcherySpawner, ArmyID);
         AiArmyRefiller.AddArmy(gvP2StableSpawner, ArmyID);
         AiArmyRefiller.AddArmy(gvP2FoundrySpawner, ArmyID);
@@ -810,6 +977,8 @@ function ControllPlayer2Attacker(_ArmyID)
         AiArmy.ClearCommands(_ArmyID);
         AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Advance, "P2OuterPos"), false);
         AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Advance, "P2AttackPath1"), false);
+        AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Advance, "P2AttackPath2"), false);
+        AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Advance, "P2AttackPath3"), false);
         AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Advance, "PlayerHome"), false);
         AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Battle), false);
         AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Fallback), false);
@@ -821,7 +990,7 @@ function ControllPlayer2Defender(_ArmyID)
         return true;
     end
     if AiArmy.IsArmyDoingNothing(_ArmyID) then
-        local Positions = {"P2DefPos1","P2DefPos2","P2DefPos3"};
+        local Positions = {"P2DefPos1","P2DefPos2","P2DefPos3","P2DefPos4","P2DefPos5","P2DefPos6"};
         for _, Position in ipairs(ShuffleTable(Positions)) do
             AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Move, Position), false);
             AiArmy.PushCommand(_ArmyID, AiArmy.CreateCommand(AiArmyCommand.Wait, 3*60), false);
@@ -836,12 +1005,12 @@ function CreatePlayer3()
         PlayerID        = 3,
         HomePosition    = "HQ3Spawn",
         Strength        = 7,
-        RodeLength      = 3000,
+        RodeLength      = 2500,
     };
-    DelinquentsCampAddSpawner(CampID, "HQ3", 2*60, 1, Entities.PU_LeaderBow1);
+    DelinquentsCampAddSpawner(CampID, "HQ3", 2*60, 2, Entities.PU_LeaderBow2);
     DelinquentsCampAddSpawner(CampID, "P3Tent1", 2*60, 1, Entities.PU_LeaderPoleArm1);
-    DelinquentsCampAddSpawner(CampID, "P3Tent2", 2*60, 1, Entities.PU_LeaderBow1);
-    DelinquentsCampAddSpawner(CampID, "P3Tent3", 2*60, 1, Entities.PU_LeaderPoleArm1);
+    DelinquentsCampAddSpawner(CampID, "P3Tent2", 2*60, 1, Entities.CU_BanditLeaderSword3);
+    DelinquentsCampAddSpawner(CampID, "P3Tent3", 2*60, 1, Entities.PU_LeaderSword2);
     DelinquentsCampAddTarget(CampID, "PlayerHome");
     DelinquentsCampActivateAttack(CampID, false);
 
@@ -878,12 +1047,12 @@ function BriefingTutorialIntro()
     AP {
         Flight      = true,
         NoSkip      = true,
+        Duration    = 0.1,
         FaderAlpha  = 1,
-        Duration    = 0,
         Target      = "CamPos3",
-        Rotation    = -45,
-        Distance    = 1000,
-        Angle       = 5,
+        Rotation    = -60,
+        Distance    = 1800,
+        Angle       = 10,
     }
     AP {
         Text        = "map_sh_tutorial/BriefingTutorialIntro_2_Text",
@@ -892,33 +1061,39 @@ function BriefingTutorialIntro()
         FadeIn      = 3,
         Duration    = 18,
         Target      = "CamPos4",
-        Rotation    = -55,
-        Distance    = 4000,
-        Angle       = 10,
+        Rotation    = -35,
+        Distance    = 2600,
+        Angle       = 14,
     }
     AP {
         NoSkip      = true,
-        Duration    = 0,
-        Target      = "CamPos2",
-        Rotation    = -35,
+        Duration    = 0.1,
+        FaderAlpha  = 1,
+        Target      = "CamPos1",
+        Rotation    = -25,
         Distance    = 7000,
-        Height      = 1300,
-        Angle       = 5,
+        Height      = 0,
+        Angle       = 8,
+        Action      = function()
+            -- TODO: Needs a proper function to do that for AI players!
+            SVLib.SetInvisibility(GetID("CampP2"), true);
+        end
     }
     AP {
         Text        = "map_sh_tutorial/BriefingTutorialIntro_4_Text",
         Flight      = true,
         NoSkip      = true,
         Duration    = 25,
-        Target      = "CamPos1",
-        Rotation    = -55,
-        Distance    = 10000,
-        Height      = 3000,
-        Angle       = 8,
+        Target      = "CamPos2",
+        Rotation    = -65,
+        Distance    = 7000,
+        Height      = 0,
+        Angle       = 14,
     }
     AP {
         NoSkip      = true,
-        Duration    = 0,
+        Duration    = 0.1,
+        FaderAlpha  = 1,
         Target      = "CamPos6",
         Rotation    = -135,
         Distance    = 4500,
@@ -928,6 +1103,7 @@ function BriefingTutorialIntro()
         Text        = "map_sh_tutorial/BriefingTutorialIntro_6_Text",
         Flight      = true,
         NoSkip      = true,
+        FadeIn      = 0.1,
         FadeOut     = 3,
         Duration    = 23,
         Target      = "CamPos5",
@@ -943,7 +1119,14 @@ function BriefingTutorialIntro()
     end
     Briefing.Finished = function(_Data)
         LookAt("Scout", "HQ1");
-        Tutorial_StartPart1();
+        for k,v in pairs(GetPlayerEntities(1, Entities.PU_Serf)) do
+            Logic.SuspendEntity(v);
+        end
+        if gvTutorial_Skip then
+            Tutorial_SkipExplainations();
+        else
+            Tutorial_StartPart1();
+        end
     end
     BriefingSystem.Start(1, "BriefingTutorialIntro", Briefing);
 end
@@ -1087,7 +1270,7 @@ function BriefingGuardian1(_Npc, _HeroID)
     }
 
     Briefing.Finished = function(_Data)
-        AllowTechnology(Technologies.B_MasterBuilderWorkshop, 1);
+        UnlockPlayerRight(1, PlayerRight.ArchitectShop);
         Job.Second(Tutorial_BridgeBuildTrigger);
         local Title = XGUIEng.GetStringTableText("map_sh_tutorial/Quest_Sub_1_Title");
         local Text  = XGUIEng.GetStringTableText("map_sh_tutorial/Quest_Sub_1_Text");
