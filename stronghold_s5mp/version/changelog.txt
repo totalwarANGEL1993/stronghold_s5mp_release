@@ -1,0 +1,405 @@
+**Strongold Version 0.7.0**
+
+__Spielmodus__
+
+Es gibt nun 3 verschiedene Spielmodus für die Standardsiegbedingung. Als 
+Standard ist "Königsmacher" festgelegt.
+
+- Konservativ:
+  * Die Burg eines Spielers muss zerstört werden
+  * Adlige können wiederbelebt werden
+  * Burgen sind unverwundbar, solange der Adlige nahe ist
+- Königsmacher:
+  * Die Burg und der Adlige müssen beseitigt werden
+  * Adlige können wiederbelebt werden
+  * Adlige ohne Burg erleiden kontinuierlich Schaden
+  * Burgen können wieder aufgebaut werden
+- Auslöschung:
+  * Die Burg, der Adlige und alle Militäreinheiten müssen beseitigt werden
+  * Adlige können wiederbelebt werden
+  * Burgen können wieder aufgebaut werden
+
+__Bevölkerung__
+
+Das Soldatenlimit wird nicht mehr durch das ausbauen von Militärgebäuden erhöht,
+sondern stattdessen durch das Besetzen von Burgen. Eine Burgruineg kann durch 
+Bauen von Außenposten besetzt werden.
+
+- Bevölkerung:
+  * Haupthaus: 60, 95, 130
+  * Dorfzentrum: 40, 65, 90
+- Knechte:
+  * Knechte zählen nun auch zur Bevölkerung!
+  * Initial 30 maximale Knechte
+  * +6 maximale Knechte für jeden Rangaufstieg
+- Soldaten:
+  * Soldaten können auch mit besiegtem Adligen rekrutiert werden
+    (Ausnahme: Spielmodus Konservativ)
+  * Haupthaus: 80, 130, 180
+  * Außenposten: 40, 65, 90
+
+__Einheiten__
+
+Die Werte aller Einheiten wurden stark überarbeitet. Dazu zählen Angriff, 
+Angriffsgeschwindigkeit, Verteidigung, Gesundheit und Soldatenanzahl.
+
+Außerdem können nun alle Adligen alle Standardeinheiten rekrutieren!
+
+__Kanonen__
+
+Kanonen haben nun die Rüstungsklasse von Schwertkämpfern. Dadurch überleben sie
+länger. Als Ausgleich benötigen sie nun wesentlich mehr Platz.
+
+- Klein (Bombarde, Große Bombarde, Bronzekanone): 8
+- Groß (Eisenkanone, Dschihad, Belagerungskanone): 16
+
+__Gebäude__
+
+Beim Gebäudebau hat sich einiges verändert.
+
+- Allgemein:
+  * Es gibt nun 3 Tabs im Menü der Knechte
+  * Ballistatürme und Kanonentürme werden eigenständig gebaut
+  * Ballistatürme können weiterhin zu Kanonentürmen ausgebaut werden
+  * Wachtürme werden zu Falknertürmen ausgebaut
+  * Mauern können nicht gebaut werden, wenn Feinde nahe sind
+  * Es gibt nun ein Söldnerlager, in dem Spezialeinheten gekauft werden können
+  * Es gibt nun einen Henkerplatz, der Verbrechen senkt
+  * Es gibt nun vier neue Verteidigungsfallen
+
+__Verteidigungsfallen__
+
+Zusätzlich zu Salims Sprengfalle kann nun jeder Adlige Fallen bauen. Knechte
+bauen diese Verteidigungsfallen wie gewöhnliche Gebäude.
+
+- Fallen sind nach Fertigstellung unsichtbar für den Gegner (allerdings auf
+  der Minimap sichtbar)
+- Diebe können feindliche Fallen dauerhaft aufdecken
+- Fallen können nicht gebaut werden, wenn Feinde nahe sind
+- Fallenarten:
+  * Ein Hundezwinger lässt Kampfhunde auf nahe Feinde los
+  * Ein Bärenzwinger lässt einen Bären auf nahe Feinde los
+  * Eine Speerfalle spießt Feinde auf
+  * Eine Pechgrube verbrennt Feinde und entzündet andere Pechgruben
+
+__Wirtschaft__
+
+Bezüglich der Wirtschaft gab es einige kleinere und größere Anpassungen.
+
+- Ausgebaute Gebäude produzieren mehr Rohstoffe
+- Es ist wesentlich einfacher die Beliebtheit aufrecht zu erhalten
+- Verbrecher
+  * Türme haben nun einen Wachmann, der aktiv Verbrecher jagd
+  * Verbrecher laufen nicht mehr nur zur Burg
+  * Der Henkerplatz reduziert das Verbrecheraufkommen
+- Ratten
+  * Ab dem Rang Graf muss sich um Verschmutzung gekümmert werden
+  * Produktionsgebäude erzeugen Ratten
+  * Falknertürme (Erweitere Aussichtstürme) fangen Ratten
+
+__Heldenfähigkeiten__
+
+- Adlige haben nicht mehr sofort alle ihre Fähigkeiten
+- Fähigkeiten sind an bestimmte Ränge gekoppelt und werden ausgewählt
+- In der Burg kann nach der Heldenwahl das Fähigkeitsfenster geöffnet werden 
+- Neben den "typischen" Fähigkeiten können mit entsprechenden Rang auch aus 
+  jeweils 2 alternativen Fähigkeiten gewählt werden.
+
+__Quality of Life__
+
+- Im Multiplayer kann die Farbe aller Spieler lokal geändert werden. Analog zu 
+  EMS, können die Farben im Diplomatiemenü durchgeschalten werden.
+
+__Maps__
+
+Alle alten Maps wurden an die neue Version angepasst. Des weiteren gibt es ein
+paar neue Maps:
+
+- *"Der einzige Weg"*
+  Eine Map für 2 Spieler, deren Inseln durch einen schmalen Pfad verbunden sind.
+- *"Die große Dürre"*
+  Eine FFA Map für 3 Spieler, bei der das Wasser langsam verdunstet.
+- *"Im Stillen Winkel"*
+  Eine FFA Map für 5 Spieler (modifiziertes BB-Original)
+- *"Calabria"*
+  Eine Map für 10 Spieler in 2 Teams (ursprünglich von RobbieTheFox)
+
+__Mapping__
+
+In einem Unterordner "mapping" werden verschiedene Dinge bereitgestellt, um 
+auch anderen die Maperstellung zu ermöglichen.
+
+- Archiv "sh_editor.bba" muss mit dem MP-Updater geladen werden
+- Skript "callbacks.lua" muss in jede Map eingefügt werden
+- Skript "mapconfig.lua" enthält die Mindeskonfiguration einer Map
+- Skript "mapscript.lua" muss das Kartenspript der Map ersetzen
+
+
+--------------------------------------------------------------------------------
+
+
+Version 0.5.49
+- Türme
+  * Können nicht gebaut werden, wenn Feinde nah sind
+  * Angriffskraft gesenkt
+  * Feuerrate gesenkt
+  * Trefferpukte halbiert
+  * Rüstung halbiert (Mauerhandwerk gibt normalen Bonus)
+- Knechte
+  * Knechte zählen zusätzlich als Bevölkerung
+- Dorfzentren
+  * Gewähren mehr Bevölkerungsplatz
+  * Ausbauten sind eher verfügbar
+
+Version 0.5.45
+- Das Verbrechersystem wurde komplett überarbeitet:
+  * Verbrecher werden von Wachmännern gejagt, die vom Wachturm gespawnt werden
+  * Verbrecher laufen nun zwischen zufälligen Gebäuden umher
+- Bei Beliebtheit <= 25 geht pro Zahltag nur noch jeder 3 Arbeiter
+- Der Schaden der meisten Fernkämpfer gegen Gebäude ist reduziert
+
+Version 0.5.38
+- Die Preise (fast) aller Einheiten wurden ein wenig gesenkt.
+- Der Steuersatz für die Arbeiter wurde leicht erhöht.
+- Die Performance wurde verbessert.
+
+Version 0.5.37
+- Folgende Dinge wurden an Kerberos' Schwarzen Rittern geändert:
+  * Schaden gegen Schwertkämpfer wurde erhöht
+  * Schaden gegen schwere Kavalerie wurde verringert
+  * Rüstungsklasse Leder -> Eisen
+  * Beschreibungstexte wurden angepasst
+
+Version 0.5.36
+- Zufallsschaden der Barbaren wurde leicht reduziert.
+- Schaden an Gebäuden durch Barbaren wurde sehr stark reduziert.
+- Gesundheit der Barbaren wurde ebenfalls reduziert.
+
+Version 0.5.35
+- Die Technologiebeschreibungen werden nicht mehr durch die Wetterwechselsperre
+  durcheinander gebracht.
+  
+Version 0.5.34
+- Palisaden und Mauern sind nun von außen mit Nahkämpfern Angreifbar, egal
+  welche Drehung sie haben.
+  (Zuvor waren sie nur bei bestimmter Drehung erreichbar.)
+- Das Spiel wird weiterhin Wegfindungsprobleme haben. Nahkämpfer müssen direkt
+  vor das Mauerteil gestellt werden, bevor der Angriffsbefehl gegeben wird.
+- Aris Bogenschützen wurden ein wenig geschwächt.
+
+Version 0.5.33
+- Geschwindigkeit der Kanonen wurde angepasst.
+  (Große Bombarde und Dschihad sind so schnell wie ihre Gegenstücke)
+- Neue Version der Armeefunktion wurde integriert.
+- Vertrauschte Icons von Drake und Yuki wurden gefixt.
+
+Version 0.5.30
+- Einige Performance Verbesserungen
+
+Version 0.5.29
+- Auswahl des Adligen ist während der Pause nicht mehr möglich.
+- Ein Bereich um die Burg ist für Gebäudebau geblockt. Dadurch können Verbrecher
+  nicht mehr stecken bleiben.
+- Update für Beliebtheit und Ehre wurde auf HiRes beschleunigt. Es sollte nun
+  nicht mehr vorkommen, Bonus in "letzter Sekunde zu verlieren".
+- Der Tooltip für die Wettermaschine legt sich nicht mehr über andere.
+- Kleinere Textkorrekturen
+
+Version 0.5.28
+- Der Konfigurationsfehler beim Limit einigen Gebäudetypen wurde behoben.
+- Das Problem mit der Serververzögerung beim Soldatenkauf wurde behoben.
+- Es ist wieder möglich, im Singleplayer zu speichern.
+- Es gibt nun eine globale Wartezeit von 5 Minuten zwischen Wetterwechseln.
+
+Version 0.5.24
+- Neue Callbacks für die Bevölkerungsgrenze sind implementiert.
+- Das Blocking offener und geschlossener Tore ist an den Rändern nun gleich.
+
+Version 0.5.23
+- Aris Kampffähigkeit wurde spürbar verbessert
+- Soldaten werden beim Rekrutieren wieder automatisch gekauft.
+- Es ist wieder möglich, mehrere Gruppen auf einmal zu füllen.
+- Wissen wird nun schneller erzeugt.
+- EMS Massenentlassung wurde implementiert.
+- EMS Schnellabriss wurde implementiert.
+
+Version 0.5.22
+- Truppenkanonen haben weniger Reichweite.
+- Banditen füllen ihre Truppen nur noch auf, wenn ihre Spawner noch existieren.
+- Es ist fortan nicht mehr möglich, Leibeigene zu kaufen, wenn die Burg
+  gerade ausgebaut wird.
+- Der Fehler, das Kerberos Leibwache nicht wiederaufgefüllt werden kann,
+  ist nun behoben.
+
+Version 0.5.21
+- Fehler behoben, der das Laden von Spielständen verhinderte.
+- Das Problem mit undefinierten Globalen wurde behoben.
+
+Version 0.5.20
+- Fehler behoben, durch den Sperren von Gebäuden über Technologien ignorierte
+- Tutorial wurde auf Englisch übersetzt.
+  (Bei Sprachen Spanisch, Französisch, Italienisch, Polisch und Russisch
+   wird Englisch verwendet)
+- Kleines Tal wurde auf Englisch übersetzt
+  (Bei Sprachen Spanisch, Französisch, Italienisch, Polisch und Russisch
+   wird Englisch verwendet)
+
+Version 0.5.18
+- Textkorrekturen im Tutorial
+- Textkorrekturen bei Minentechnologien
+- Positionskorrektur Briefing Buttons
+
+Version 0.5.17
+- Zivilistenschutz vor Helden erweitert
+  * Helden verursachen Minimalschaden gegen Arbeitsstätten
+  * Helden verursachen Minimalschaden gegen Arbeiter
+  * Helden verursachen Minimalschaden gegen Knechte
+- Rekrutierungsdelay ist nun 0,2 Sekunden
+- Überblendungen nun hoffentlich gefixt
+- Gebäudelimits angepasst
+  * Kasernen: 6, 9, 12 je Burgstufe und 2, 4, 6 für DZ-Stufe
+  * Gießereien: 1. 2. 3 je Burgstufe
+- Ausbaunachricht für das Haupthaus kommt jetzt
+- Fernglastextur der Leibeigenen gefixt
+- Einige Fehler bei Sammelpunkten behoben
+  * Gebäudebau bricht nicht mehr den das Setzen von Sammelpunkten ab
+  * Der Zuschauer sieht nicht mehr den Button
+  * Der Zuschauer kann gesetzte Sammelpunkte eines Spielers sehen
+- Kundschafter können Schächte und Steinschläge sprengen
+- Nur Kerberos zeigt den Button zum Soldatenrekrutieren an
+- Aris Spezialeinheiten haben Schwertkämpferrüstung erhalten
+- Pilgrim nutzt jtzt die Selbstschusskanone anstatt der Bombe
+- Salims Falle ist jetzt schwächer
+- Passives Bekehren von Gegnern durch Helias funktioniert wieder
+- Marys Spezialeinheiten angepasst
+  * Schaden: 33 -> 54
+  * Plätze: 1 -> 2
+  * Soldaten: 6 -> 3
+- Pasiver Einsatz von Shuriken durch Yuki funktioniert wieder
+
+Version 0.5.10
+- Es gibt nun ein 0,3 Sekunden Delay beim Rekrutieren von Einheiten
+- Soldatenlimit ist kastriert auf 320
+  Erstes Militärgebäude zählt nicht mit, danach alle 2 Gebäude +10 (+20)
+- Scharfschützen halten weniger aus
+- Kanonen kosten jetzt tatsächlich Unterhalt
+- Turniermap hat ein Turmlimit von 12 bekommen
+- Gegner sehen nur noch, dass irgend ein Adliger befördert wurde
+- Upgrades werden nicht mehr fälschlich zu früh freigeschaltet
+- Tore können jetzt wieder geschlossen werden
+
+Version 0.5.7
+- Auf Wunsch der Tester wurden negative Effekte auf die Beliebtheit
+  abgeschwächt, damit auch schwächere Spieler Spaß haben können.
+  * Beliebtheitsverlust durch Verbrecher nun fix bei -6
+  * Türme und bewaffnete Knechte finden Diebe schneller
+  * Der Adlige kann Verbrecher stellen
+- Neue Friedenszeiten: 0, 15, 30, 45, 60 Minuten
+  (Weil man länger für den Aufbau braucht.)
+- Banditencamps spawnen ihre Truppen nicht mehr zufällig, sondern in einer
+  Endlosschleiße. So hat jeder Spieler die gleichen Gegner.
+- Erecs Kavalerie verbessert
+  (LCav +2 Schanden, SCav +2 Rüstung)
+- Helias reduziert die Verbrechensrate nur noch um 15%
+  (Die Halbierung hatte dafür gesorgt, dass u.U. gar keine Verbrecher
+   entstanden. Außerdem können Adlige Verbrecher nun direkt stellen.)
+- Helias Spezialtruppen sind verstärkt
+  (Haben hohe Ausweichchance und geringfügig mehr Schaden)
+- Yukis einmaliger Beliebtheitsbonus wurde auf 25 verringert
+  (Es wurde kritisiert, dass ein Spieler, der einfach so 100 Beliebtheit
+   bekommt, einen viel zu großen Vorteil hat. Man kann Beliebtheit fast
+   ignorieren und Arbeiter sind doppelt so effektiv.)
+- Yuki setzt Shuriken seltener ein
+  (15 Sekunden -> 20 Sekunden)
+- Für die Beförderung gibt es nun eine Mengenanzeige (aktuell/benötigt)
+  für alle Bedingungen die eine Anzahl von etwas voraussetzen.
+- Fehler behoben, bei dem es zu einem Lua Error kam, wenn der Schießplatz
+  angeklickt und als Held Drake oder Yuki gewälht waren
+- Potentielle Desync-Quelle Sammelpunkt gefixt.
+  (Sammelpunkte werden nicht mehr automatisch erzeugt.)
+
+Version 0.4.13
+- Der Fehler das bei ausgelastetem Arbeiterlimit nicht mehr rekrutieren
+  kann, ist behoben
+- Leibeigene benötigen einen lebendigen Adligen
+  (Es war ein Logikfehler, dass das persönliche Eigentum des Adligen ohne
+   einen Adligen angeworben werden kann)
+- Zwangssteuer verwendet jetzt feste Werte
+  (5 Taler pro Arbeiter (+1 Taler pro Verbesserung))
+- Ari lässt Knechte wieder schonender Mineralien abbauen
+  (alle 5 Sekunden schonen alle gerade Hackenden Knechte Hackmenge -1)
+- Helias bekehrt alle 45 Sekunden einen Gegner
+  (nur, wenn Helias angegriffen wird und Feinde nah sind)
+- Yuki wirft alle 15 Sekunden Shuriken
+  (nur, wenn Yuki angegriffen wird)
+- Erzeugte Entities werden ins Desync Log geschrieben (Debug)
+- Gutgeschriebene Resourcen werden ins Desync Log geschrieben (Debug)
+- Sync Calls werden ins Desync Log geschrieben (Debug)
+
+Version 0.4.12
+- Es können nicht mehr als 5 Arbeiter pro Zahltag zum Verbrecher werden.
+- Soldaten können für mehrere Gruppen gleichzeitig gekauft werden
+- Tavernenfaktoren wurden angepasst
+  (Tavernen sollten jetzt nicht mehr so OP sein)
+- Hochschulen zeigen wieder den Wissensfortschritt an
+- Kerberos verringert Beliebtheitsstrafe nur noch um 25%
+  (Da die Beliebtheitsstrafe abgeschwächt wurde, musste die Fähigkeit auch angepasst werden)
+- Mary erhöht Knechtelimit nur noch um 10%
+  (Viel mehr Knechte zu haben als andere Spieler erschien mir für zu unfair.)
+- Salim erlässt nur noch 2 Plätze pro Kanone (ohne Verteuerung)
+  (m.E.n. war Platzhalbierung zu stark)
+- Erec rekrutiert mit weniger Erfahrung (25% Verteuerung)
+- Ari steigert nur noch die Menge an Holz pro Baum
+  (Langlebigere Bäume sorgten dafür, dass der Spieler länger auf Bauplatz warten muss und so einen Nachteil hat)
+- Wetterset gefixt (Turnier-Map)
+- Alle Adligen können von der KI verwendet werden (Mapping)
+
+Version 0.4.8
+- Vanilla Rekrutierungssystem (behebt hoffentlich Desync)
+- Rekrutierungsgebäude sind nun dynamisch limitiert
+- Passive Truppenstärkung vollständig entfernt
+- Soldaten können nicht in Feindesnähe gekauft werden
+  (Soll campen an Rekrutierungsgebäuden verhindern)
+- Hauptgebäude werden auch verwundbar, wenn der Held zu weit weg ist
+- Hauptgebäude haben jetzt Geschütze
+- Erecs Rundumschlag ist stärker und kann öfter eingesetzt werden
+- Pilgrims Abbaubonus wurde reduziert
+- Vargs Tavernenbonus verringert
+- Drake beschleunigt aus technischen Gründen Rekrutierung nicht mehr
+- Verbrecher sind nicht mehr absurd stark
+- Sammelpunkte nutzen jetzt R als Hotkey
+- Leibeigene hacken nicht mehr an Mauerbauplätzen
+- KI Held Dovbar ist wesentlich zäher
+- Tutorial verbessert (Atmosphäre)
+- Verbieten von Rechten funktioniert jetzt richtig (Mapping)
+- Gebäude können (theoretisch) 8 Einheitentypen rekrutieren (Mapping)
+
+Version 0.3.7
+- Entwurf für Turniermap hinzugefügt
+- Fehler behoben, der Drake Erfahrungseffekte gewährte
+- Fehler behoben, der Bärenmenschen zu stark machte
+- Neue Schadensklasse für Speerwerfer
+- Rangfaktor für Maßnahmen angehoben
+- Leichte Kavalerie ist nun schwach gegen Speerträger
+- Alle Nahkämpfer haben jetzt 300 Reichweite
+- Passiver Skill Turmdistanz wurde entfernt
+- Alle Turmgeschütze geschwächt
+- Pilgrim steigert jetzt Turmgeschützschaden um 10%
+- Steinmauern brennen nicht mehr (Optics)
+- Mauerbauplätze sind frei dreh- und spiegelbar (Mapping)
+
+Version 0.2.0
+
+- Alle Helden haben jetzt mindestens eine Spezialeinheit
+- DPS aller Einheiten besser ausbalanciert
+- Area Damage der Helden angepasst
+- Sammelpunkte können nun auch für Gießereien festgelegt werden
+- Leibeigene sollten beim Mauerbau nicht mehr stecken bleiben
+- Mauerteile passen jetzt besser zusammen
+- Gebäuderotation wird automatisch zurückgesetzt
+- Hochschule wurde auf vorherigen Stand zurückgesetzt
+- Die Anzeige der Sozialresourcen wurde überarbeitet
+  - Beliebtheit wird jetzt rot, wenn unter 50
+  - Ehre wird jetzt rot, wenn 0
+  - Wissen wird jetzt rot, wenn 0
+- Die Kamera kann beim Start Countdown nicht mehr verschoben werden
