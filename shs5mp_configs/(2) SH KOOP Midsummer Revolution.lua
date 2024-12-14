@@ -90,7 +90,7 @@ SHS5MP_RulesDefinition = {
         Lib.Require("module/cinematic/BriefingSystem");
         Lib.Require("module/io/NonPlayerCharacter");
         Lib.Require("module/io/NonPlayerMerchant");
-        BriefingSystem.SetMCButtonCount(8);
+        Cinematic.SetMCButtonCount(8);
 
         Difficulty_Selected = 0;
         Difficulty_NetEvent = Syncer.CreateEvent(function(_PlayerID, _Selected)
